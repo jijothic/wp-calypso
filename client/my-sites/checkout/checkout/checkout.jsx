@@ -31,6 +31,7 @@ import notices from 'notices';
 import observe from 'lib/mixins/data-observe';
 /* eslint-enable no-restricted-imports */
 import purchasePaths from 'me/purchases/paths';
+import QueryContactDetailsCache from 'components/data/query-contact-details-cache';
 import QueryStoredCards from 'components/data/query-stored-cards';
 import QueryGeo from 'components/data/query-geo';
 import SecurePaymentForm from './secure-payment-form';
@@ -42,6 +43,7 @@ import {
 	SUBMITTING_WPCOM_REQUEST,
 } from 'lib/store-transactions/step-types';
 import upgradesActions from 'lib/upgrades/actions';
+import { getContactDetailsCache } from 'state/selectors';
 import { getStoredCards } from 'state/stored-cards/selectors';
 import { isValidFeatureKey, getUpgradePlanSlugFromPath } from 'lib/plans';
 import { planItem as getCartItemForPlan } from 'lib/cart-values/cart-items';
@@ -112,6 +114,23 @@ const Checkout = createReactClass( {
 		if ( ! isEqual( previousCart, nextCart ) ) {
 			this.redirectIfEmptyCart();
 			this.setState( { previousCart: nextCart } );
+		}
+
+		if (
+			this.props.contactDetails &&
+			cartItems.hasGoogleApps( this.props.cart ) &&
+			this.needsDomainDetails()
+		) {
+			this.setDomainDetailsForGsuiteCart();
+		}
+	},
+
+	setDomainDetailsForGsuiteCart() {
+		const { contactDetails, cart } = this.props;
+		const domainReceiptId = get( cartItems.getGoogleApps( cart ), '0.extra.receipt_for_domain', 0 );
+
+		if ( domainReceiptId ) {
+			upgradesActions.setDomainDetails( contactDetails );
 		}
 	},
 
@@ -269,12 +288,13 @@ const Checkout = createReactClass( {
 		}
 
 		if ( abtest( 'gsuiteUpsell' ) === 'show' ) {
-			const gsuiteItems = cartItems.getGoogleApps( cart );
-			if ( gsuiteItems.length ) {
-				const domainReceiptId = get( gsuiteItems[ 0 ], 'extra.receipt_for_domain' );
-				if ( domainReceiptId ) {
-					return `/checkout/thank-you/${ selectedSiteSlug }/${ domainReceiptId }/with-gsuite/${ receiptId }`;
-				}
+			const domainReceiptId = get(
+				cartItems.getGoogleApps( cart ),
+				'0.extra.receipt_for_domain',
+				0
+			);
+			if ( domainReceiptId ) {
+				return `/checkout/thank-you/${ selectedSiteSlug }/${ domainReceiptId }/with-gsuite/${ receiptId }`;
 			}
 
 			if ( ! cartItems.hasGoogleApps( cart ) && cartItems.hasDomainRegistration( cart ) ) {
@@ -457,6 +477,7 @@ const Checkout = createReactClass( {
 		return (
 			<div className="main main-column" role="main">
 				<div className="checkout">
+					<QueryContactDetailsCache />
 					<QueryStoredCards />
 					<QueryGeo />
 
@@ -478,6 +499,7 @@ export default connect(
 			selectedSite: getSelectedSite( state ),
 			selectedSiteId,
 			selectedSiteSlug: getSelectedSiteSlug( state ),
+			contactDetails: getContactDetailsCache( state ),
 		};
 	},
 	{
