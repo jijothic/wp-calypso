@@ -117,6 +117,7 @@ const Checkout = createReactClass( {
 		}
 
 		if (
+			abtest( 'gsuiteUpsell' ) === 'show' &&
 			this.props.contactDetails &&
 			cartItems.hasGoogleApps( this.props.cart ) &&
 			this.needsDomainDetails()
