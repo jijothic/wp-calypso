@@ -30,6 +30,7 @@ class ActivityLogItem extends Component {
 		disableRestore: PropTypes.bool.isRequired,
 		hideRestore: PropTypes.bool,
 		requestRestore: PropTypes.func.isRequired,
+		requestBackup: PropTypes.func.isRequired,
 		siteId: PropTypes.number.isRequired,
 
 		log: PropTypes.shape( {
@@ -67,6 +68,11 @@ class ActivityLogItem extends Component {
 	handleClickRestore = () => {
 		const { log, requestRestore } = this.props;
 		requestRestore( log.activityId, 'item' );
+	};
+
+	handleClickBackup = () => {
+		const { log, requestBackup } = this.props;
+		requestBackup( log.activityId, 'item' );
 	};
 
 	handleOpen = () => {
@@ -134,6 +140,9 @@ class ActivityLogItem extends Component {
 						onClick={ this.handleClickRestore }
 					>
 						{ translate( 'Rewind to this point' ) }
+					</PopoverMenuItem>
+					<PopoverMenuItem icon="cloud-download" onClick={ this.handleClickBackup }>
+						{ translate( 'Download backup' ) }
 					</PopoverMenuItem>
 				</EllipsisMenu>
 			</div>

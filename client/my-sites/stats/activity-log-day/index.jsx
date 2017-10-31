@@ -62,6 +62,7 @@ class ActivityLogDay extends Component {
 		logs: PropTypes.array.isRequired,
 		requestedRestoreActivityId: PropTypes.string,
 		requestRestore: PropTypes.func.isRequired,
+		requestBackup: PropTypes.func.isRequired,
 		rewindConfirmDialog: PropTypes.element,
 		siteId: PropTypes.number,
 		tsEndOfSiteDay: PropTypes.number.isRequired,
@@ -210,6 +211,7 @@ class ActivityLogDay extends Component {
 			logs,
 			requestedRestoreActivityId,
 			requestRestore,
+			requestBackup,
 			rewindConfirmDialog,
 			siteId,
 			tsEndOfSiteDay,
@@ -238,6 +240,7 @@ class ActivityLogDay extends Component {
 				hideRestore={ hideRestore }
 				log={ log }
 				requestRestore={ requestRestore }
+				requestBackup={ requestBackup }
 				siteId={ siteId }
 			/>
 		);

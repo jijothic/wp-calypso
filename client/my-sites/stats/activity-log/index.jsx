@@ -42,6 +42,7 @@ import {
 	rewindRequestDismiss as rewindRequestDismissAction,
 	rewindRequestRestore as rewindRequestRestoreAction,
 	rewindRestore as rewindRestoreAction,
+	rewindRequestBackup,
 } from 'state/activity-log/actions';
 import {
 	canCurrentUser,
@@ -54,6 +55,7 @@ import {
 	getSiteTimezoneValue,
 	getRewindStartDate,
 	isRewindActive as isRewindActiveSelector,
+	getRequestedBackup,
 } from 'state/selectors';
 
 /**
@@ -217,6 +219,7 @@ class ActivityLog extends Component {
 			error: PropTypes.string.isRequired,
 			message: PropTypes.string.isRequired,
 		} ),
+		requestBackup: PropTypes.func.isRequired,
 		siteId: PropTypes.number,
 		siteTitle: PropTypes.string,
 		slug: PropTypes.string,
@@ -274,6 +277,20 @@ class ActivityLog extends Component {
 		debug( 'Restore requested for after activity %o', requestedRestoreActivity );
 		recordTracksEvent( 'calypso_activitylog_restore_confirm', { rewindId } );
 		rewindRestore( siteId, rewindId );
+	};
+
+	/**
+	 * The link to download a backup in ellipsis menu in ActivityLogDay > ActivityLogItem uses
+	 * this method to point that a backup has been requested and show the dialog.
+	 *
+	 * @param {string} activityId Id of the activity up to the one we're downloading.
+	 * @param {object} from       Context for tracking.
+	 */
+	handleRequestBackup = ( activityId, from ) => {
+		const { recordTracksEvent, requestBackup, siteId } = this.props;
+
+		recordTracksEvent( 'calypso_activitylog_backup_request', { from } );
+		requestBackup( siteId, activityId );
 	};
 
 	/**
@@ -409,6 +426,7 @@ class ActivityLog extends Component {
 			moment,
 			requestedRestoreActivity,
 			requestedRestoreActivityId,
+			requestedBackup,
 			siteId,
 			slug,
 			startDate,
@@ -441,6 +459,10 @@ class ActivityLog extends Component {
 				timestamp={ requestedRestoreActivity.activityTs }
 			/>
 		);
+
+		if ( requestedBackup ) {
+			// prepare dialog to send to day
+		}
 
 		const visualGroups = intoVisualGroups(
 			logsByDay( moment, logs, this.getStartMoment(), this.applySiteOffset )
@@ -531,6 +553,7 @@ class ActivityLog extends Component {
 												isRewindActive={ isRewindActive }
 												logs={ events }
 												requestRestore={ this.handleRequestRestore }
+												requestBackup={ this.handleRequestBackup }
 												siteId={ siteId }
 												tsEndOfSiteDay={ start.valueOf() }
 											/>
@@ -552,6 +575,7 @@ export default connect(
 		const gmtOffset = getSiteGmtOffset( state, siteId );
 		const timezone = getSiteTimezoneValue( state, siteId );
 		const requestedRestoreActivityId = getRequestedRewind( state, siteId );
+		const requestedBackupId = getRequestedBackup( state, siteId );
 
 		return {
 			canViewActivityLog: canCurrentUser( state, siteId, 'manage_options' ),
@@ -564,6 +588,8 @@ export default connect(
 			),
 			requestedRestoreActivity: getActivityLog( state, siteId, requestedRestoreActivityId ),
 			requestedRestoreActivityId,
+			requestedBackup: getActivityLog( state, siteId, requestedBackupId ),
+			requestedBackupId,
 			restoreProgress: getRestoreProgress( state, siteId ),
 			rewindStatusError: getRewindStatusError( state, siteId ),
 			rewindStartDate: getRewindStartDate( state, siteId ),
@@ -581,5 +607,6 @@ export default connect(
 		rewindRequestDismiss: rewindRequestDismissAction,
 		rewindRequestRestore: rewindRequestRestoreAction,
 		rewindRestore: rewindRestoreAction,
+		requestBackup: rewindRequestBackup,
 	}
 )( localize( ActivityLog ) );

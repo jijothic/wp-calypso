@@ -21,6 +21,7 @@ import {
 	REWIND_STATUS_ERROR,
 	REWIND_STATUS_REQUEST,
 	REWIND_STATUS_UPDATE,
+	REWIND_BACKUP_PLEASE,
 } from 'state/action-types';
 
 /**
@@ -225,5 +226,20 @@ export function rewindRestoreUpdateError( siteId, timestamp, error ) {
 		siteId,
 		timestamp,
 		error,
+	};
+}
+
+/**
+ * Request a backup up to a specific Activity.
+ *
+ * @param  {string|number} siteId Site ID
+ * @param  {number}        activityId Activity ID
+ * @return {Object}        action object
+ */
+export function rewindRequestBackup( siteId, activityId ) {
+	return {
+		type: REWIND_BACKUP_PLEASE,
+		siteId,
+		activityId,
 	};
 }
