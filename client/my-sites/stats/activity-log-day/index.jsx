@@ -63,7 +63,8 @@ class ActivityLogDay extends Component {
 		requestedRestoreActivityId: PropTypes.string,
 		requestRestore: PropTypes.func.isRequired,
 		requestBackup: PropTypes.func.isRequired,
-		rewindConfirmDialog: PropTypes.element,
+		restoreConfirmDialog: PropTypes.element,
+		backupConfirmDialog: PropTypes.element,
 		siteId: PropTypes.number,
 		tsEndOfSiteDay: PropTypes.number.isRequired,
 
@@ -210,27 +211,28 @@ class ActivityLogDay extends Component {
 			isToday,
 			logs,
 			requestedRestoreActivityId,
+			requestedBackupId,
 			requestRestore,
 			requestBackup,
-			rewindConfirmDialog,
+			restoreConfirmDialog,
+			backupConfirmDialog,
 			siteId,
 			tsEndOfSiteDay,
 		} = this.props;
 
 		const rewindHere = this.state.rewindHere;
 		const dayExpanded = this.state.dayExpanded ? true : rewindHere;
+		const requestedActionId = requestedRestoreActivityId || requestedBackupId;
+		const confirmDialog = restoreConfirmDialog || backupConfirmDialog;
 
 		const hasConfirmDialog = logs.some(
 			( { activityId, activityTs } ) =>
-				activityId === requestedRestoreActivityId &&
+				activityId === requestedActionId &&
 				( tsEndOfSiteDay - DAY_IN_MILLISECONDS <= activityTs && activityTs <= tsEndOfSiteDay )
 		);
 
 		const rewindButton = this.renderRewindButton( hasConfirmDialog ? '' : 'primary' );
-		const [ newer, above, older ] = splitByRewind(
-			rewriteStream( logs ),
-			requestedRestoreActivityId
-		);
+		const [ newer, above, older ] = splitByRewind( rewriteStream( logs ), requestedActionId );
 
 		const LogItem = ( { log, hasBreak } ) => (
 			<ActivityLogItem
@@ -262,7 +264,7 @@ class ActivityLogDay extends Component {
 				>
 					{ newer.map( log => <LogItem { ...{ key: log.activityId, log } } /> ) }
 					{ above && <LogItem { ...{ key: above.activityId, log: above, hasBreak: true } } /> }
-					{ older.length > 0 && rewindConfirmDialog }
+					{ older.length > 0 && confirmDialog }
 					{ older.map( log => <LogItem { ...{ key: log.activityId, log } } /> ) }
 				</FoldableCard>
 			</div>

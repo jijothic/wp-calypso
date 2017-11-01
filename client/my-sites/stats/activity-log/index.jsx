@@ -294,6 +294,27 @@ class ActivityLog extends Component {
 	};
 
 	/**
+	 * Close Backup confirmation dialog.
+	 */
+	handleBackupDialogClose = () => {
+		const { recordTracksEvent, rewindRequestDismiss, siteId } = this.props;
+		recordTracksEvent( 'calypso_activitylog_backup_cancel' );
+		//rewindRequestDismiss( siteId );
+	};
+
+	/**
+	 * Proceed with Backup since user confirmed.
+	 */
+	handleBackupDialogConfirm = () => {
+		const { recordTracksEvent, requestedBackup, rewindRestore, siteId } = this.props;
+		const { rewindId } = requestedBackup;
+
+		debug( 'Restore requested for after activity %o', requestedBackup );
+		recordTracksEvent( 'calypso_activitylog_backup_confirm', { rewindId } );
+		//rewindRestore( siteId, rewindId );
+	};
+
+	/**
 	 * Adjust a moment by the site timezone or gmt offset. Use the resulting function wherever log
 	 * times need to be formatted for display to ensure all times are displayed as site times.
 	 *
@@ -427,6 +448,7 @@ class ActivityLog extends Component {
 			requestedRestoreActivity,
 			requestedRestoreActivityId,
 			requestedBackup,
+			requestedBackupId,
 			siteId,
 			slug,
 			startDate,
@@ -450,7 +472,7 @@ class ActivityLog extends Component {
 
 		const disableRestore = this.isRestoreInProgress();
 
-		const rewindConfirmDialog = requestedRestoreActivity && (
+		const restoreConfirmDialog = requestedRestoreActivity && (
 			<ActivityLogConfirmDialog
 				applySiteOffset={ this.applySiteOffset }
 				key="activity-rewind-dialog"
@@ -460,9 +482,17 @@ class ActivityLog extends Component {
 			/>
 		);
 
-		if ( requestedBackup ) {
-			// prepare dialog to send to day
-		}
+		const backupConfirmDialog = requestedBackup && (
+			<ActivityLogConfirmDialog
+				applySiteOffset={ this.applySiteOffset }
+				key="activity-backup-dialog"
+				onClose={ this.handleBackupDialogClose }
+				onConfirm={ this.handleBackupDialogConfirm }
+				timestamp={ requestedBackup.activityTs }
+				type={ 'backup' }
+				icon={ 'cloud-download' }
+			/>
+		);
 
 		const visualGroups = intoVisualGroups(
 			logsByDay( moment, logs, this.getStartMoment(), this.applySiteOffset )
@@ -547,7 +577,9 @@ class ActivityLog extends Component {
 												key={ start.format() }
 												applySiteOffset={ this.applySiteOffset }
 												requestedRestoreActivityId={ requestedRestoreActivityId }
-												rewindConfirmDialog={ rewindConfirmDialog }
+												requestedBackupId={ requestedBackupId }
+												restoreConfirmDialog={ restoreConfirmDialog }
+												backupConfirmDialog={ backupConfirmDialog }
 												disableRestore={ disableRestore }
 												hideRestore={ ! rewindEnabledByConfig || ! isPressable }
 												isRewindActive={ isRewindActive }
