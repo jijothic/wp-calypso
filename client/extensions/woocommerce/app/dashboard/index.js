@@ -148,7 +148,7 @@ class Dashboard extends Component {
 		}
 
 		if ( ! setStoreAddressDuringInitialSetup && ! hasProducts ) {
-			return <PreSetupView site={ selectedSite } />;
+			return <PreSetupView siteId={ selectedSite.ID || null } />;
 		}
 
 		if ( ! finishedInitialSetup ) {
