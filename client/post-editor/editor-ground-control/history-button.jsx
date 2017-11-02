@@ -12,25 +12,22 @@ import { flow } from 'lodash';
  * Internal dependencies
  */
 import { recordTracksEvent } from 'state/analytics/actions';
-import { getPostRevisionsSelectedRevisionId } from 'state/selectors';
+import { getPostRevisionsSelectedRevisionId, isPostRevisionsDialogVisible } from 'state/selectors';
+import { togglePostRevisionsDialog } from 'state/posts/revisions/actions';
 import EditorRevisions from 'post-editor/editor-revisions';
 import Dialog from 'components/dialog';
 import LoadButton from 'post-editor/editor-revisions-list/load-button';
 
 class HistoryButton extends PureComponent {
-	state = {};
-
 	toggleShowingDialog = () => {
-		if ( ! this.state.isDialogVisible ) {
+		if ( ! this.props.isDialogVisible ) {
 			this.props.recordTracksEvent( 'calypso_editor_post_revisions_open' );
 		}
-		this.setState( {
-			isDialogVisible: ! this.state.isDialogVisible,
-		} );
+		this.props.togglePostRevisionsDialog();
 	};
 
 	render() {
-		const { postId, selectedRevisionId, siteId, translate } = this.props;
+		const { isDialogVisible, postId, selectedRevisionId, siteId, translate } = this.props;
 		const dialogButtons = [
 			{ action: 'cancel', compact: true, label: translate( 'Cancel' ) },
 			<LoadButton postId={ postId } selectedRevisionId={ selectedRevisionId } siteId={ siteId } />,
@@ -47,7 +44,7 @@ class HistoryButton extends PureComponent {
 				<Dialog
 					buttons={ dialogButtons }
 					className="editor-ground-control__dialog"
-					isVisible={ this.state.isDialogVisible }
+					isVisible={ isDialogVisible }
 					onClose={ this.toggleShowingDialog }
 					position="bottom"
 				>
@@ -60,10 +57,12 @@ class HistoryButton extends PureComponent {
 
 HistoryButton.PropTypes = {
 	// connected to state
+	isDialogVisible: PropTypes.bool.isRequired,
 	selectedRevisionId: PropTypes.number,
 
 	// connected to dispatch
-	recordTracksEvent: PropTypes.func,
+	recordTracksEvent: PropTypes.func.isRequired,
+	togglePostRevisionsDialog: PropTypes.func.isRequired,
 
 	// localize
 	translate: PropTypes.func,
@@ -71,7 +70,14 @@ HistoryButton.PropTypes = {
 
 export default flow(
 	localize,
-	connect( state => ( { selectedRevisionId: getPostRevisionsSelectedRevisionId( state ) } ), {
-		recordTracksEvent,
-	} )
+	connect(
+		state => ( {
+			isDialogVisible: isPostRevisionsDialogVisible( state ),
+			selectedRevisionId: getPostRevisionsSelectedRevisionId( state ),
+		} ),
+		{
+			recordTracksEvent,
+			togglePostRevisionsDialog,
+		}
+	)
 )( HistoryButton );
