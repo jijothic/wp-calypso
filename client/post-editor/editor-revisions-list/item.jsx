@@ -40,22 +40,32 @@ class EditorRevisionsListItem extends PureComponent {
 
 				<div className="editor-revisions-list__changes">
 					{ revision.changes.added > 0 && (
-						<span className="editor-revisions-list__additions">
+						<span
+							className="editor-revisions-list__additions"
+							aria-label={ this.props.translate(
+								'%(changes)d word added',
+								'%(changes)d words added',
+								{
+									args: { changes: this.props.revision.changes.added },
+									count: revision.changes.added,
+								}
+							) }
+						>
 							<b>+</b>
-							{ this.props.translate( '%(changes)d', '%(changes)d', {
-								args: { changes: this.props.revision.changes.added },
-								count: revision.changes.added,
-							} ) }
+							{ revision.changes.added }
 						</span>
 					) }
 
 					{ revision.changes.removed > 0 && (
-						<span className="editor-revisions-list__deletions">
-							<b>-</b>
-							{ translate( '%(changes)d', '%(changes)d', {
+						<span
+							className="editor-revisions-list__deletions"
+							aria-label={ translate( '%(changes)d word removed', '%(changes)d words removed', {
 								args: { changes: revision.changes.removed },
 								count: revision.changes.removed,
 							} ) }
+						>
+							<b>-</b>
+							{ revision.changes.removed }
 						</span>
 					) }
 
