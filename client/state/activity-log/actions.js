@@ -22,6 +22,7 @@ import {
 	REWIND_STATUS_REQUEST,
 	REWIND_STATUS_UPDATE,
 	REWIND_BACKUP_REQUEST,
+	REWIND_BACKUP_DISMISS,
 } from 'state/action-types';
 
 /**
@@ -168,7 +169,6 @@ export function rewindRequestRestore( siteId, activityId ) {
  * Dismiss a restore request.
  *
  * @param  {string|number} siteId Site ID
- * @param  {number}        activityId Activity ID
  * @return {Object}        action object
  */
 export function rewindRequestDismiss( siteId ) {
@@ -241,5 +241,18 @@ export function rewindRequestBackup( siteId, activityId ) {
 		type: REWIND_BACKUP_REQUEST,
 		siteId,
 		activityId,
+	};
+}
+
+/**
+ * Dismiss a backup request.
+ *
+ * @param  {string|number} siteId Site ID
+ * @return {Object}        action object
+ */
+export function rewindBackupDismiss( siteId ) {
+	return {
+		type: REWIND_BACKUP_DISMISS,
+		siteId,
 	};
 }
