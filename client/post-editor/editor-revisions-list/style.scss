@@ -67,17 +67,18 @@
 	width: 75vw;
 	justify-content: space-between;
 	overflow-y: hidden;
+}
 
-	.editor-revisions-list {
-		min-width: 200px;
-		max-width: 250px;
-		overflow-y: scroll;
-	}
+.editor-revisions-list {
+	border-left: 1px solid darken($sidebar-bg-color, 5%);
+	min-width: 200px;
+	max-width: 250px;
+	overflow-y: scroll;
+}
 
-	.editor-diff-viewer {
-		min-width: 300px;
-		overflow-y: scroll;
-	}
+.editor-diff-viewer {
+	min-width: 300px;
+	overflow-y: scroll;
 }
 
 .editor-revisions-list__revision {
@@ -103,7 +104,6 @@
 .editor-revisions-list__list,
 .editor-revisions-list__header {
 	background: $white;
-	border-top: 1px solid darken($sidebar-bg-color, 5%);
 	border-bottom: 1px solid darken($sidebar-bg-color, 5%);
 	font-size: 13px;
 }
