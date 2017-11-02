@@ -1,4 +1,5 @@
 /** @format */
+// @TODO we should decouple from accordion styles
 @import 'components/accordion/style';
 
 .editor-revisions-list {
@@ -60,18 +61,21 @@
 	color: $gray-text-min;
 }
 
-.editor-ground-control__dialog {
-	min-width: 600px;
-}
-
 .editor-revisions__wrapper {
 	display: flex;
 	height: 96vh;
+	min-width: 600px;
 	justify-content: space-between;
+	overflow-y: hidden;
 
 	.editor-revisions-list {
 		min-width: 200px;
 		max-width: 250px;
+		overflow-y: scroll;
+	}
+
+	.editor-diff-viewer {
+		overflow-y: scroll;
 	}
 }
 
