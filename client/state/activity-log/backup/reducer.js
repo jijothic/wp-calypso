@@ -2,7 +2,7 @@
 /**
  * Internal dependencies
  */
-import { REWIND_BACKUP, REWIND_BACKUP_DISMISS, REWIND_BACKUP_PLEASE } from 'state/action-types';
+import { REWIND_BACKUP, REWIND_BACKUP_DISMISS, REWIND_BACKUP_REQUEST } from 'state/action-types';
 import { keyedReducer } from 'state/utils';
 
 export const backupRequest = keyedReducer(
@@ -13,7 +13,7 @@ export const backupRequest = keyedReducer(
 			case REWIND_BACKUP_DISMISS:
 				return undefined;
 
-			case REWIND_BACKUP_PLEASE:
+			case REWIND_BACKUP_REQUEST:
 				return activityId;
 
 			default:

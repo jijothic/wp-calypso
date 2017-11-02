@@ -15,13 +15,13 @@ import {
 	REWIND_RESTORE_DISMISS,
 	REWIND_RESTORE_DISMISS_PROGRESS,
 	REWIND_RESTORE_PROGRESS_REQUEST,
-	REWIND_RESTORE_PLEASE,
+	REWIND_RESTORE_REQUEST,
 	REWIND_RESTORE_UPDATE_ERROR,
 	REWIND_RESTORE_UPDATE_PROGRESS,
 	REWIND_STATUS_ERROR,
 	REWIND_STATUS_REQUEST,
 	REWIND_STATUS_UPDATE,
-	REWIND_BACKUP_PLEASE,
+	REWIND_BACKUP_REQUEST,
 } from 'state/action-types';
 
 /**
@@ -158,7 +158,7 @@ export function rewindStatusError( siteId, error ) {
  */
 export function rewindRequestRestore( siteId, activityId ) {
 	return {
-		type: REWIND_RESTORE_PLEASE,
+		type: REWIND_RESTORE_REQUEST,
 		siteId,
 		activityId,
 	};
@@ -238,7 +238,7 @@ export function rewindRestoreUpdateError( siteId, timestamp, error ) {
  */
 export function rewindRequestBackup( siteId, activityId ) {
 	return {
-		type: REWIND_BACKUP_PLEASE,
+		type: REWIND_BACKUP_REQUEST,
 		siteId,
 		activityId,
 	};

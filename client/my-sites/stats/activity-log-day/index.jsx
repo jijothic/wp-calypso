@@ -223,7 +223,6 @@ class ActivityLogDay extends Component {
 		const rewindHere = this.state.rewindHere;
 		const dayExpanded = this.state.dayExpanded ? true : rewindHere;
 		const requestedActionId = requestedRestoreActivityId || requestedBackupId;
-		const confirmDialog = restoreConfirmDialog || backupConfirmDialog;
 
 		const hasConfirmDialog = logs.some(
 			( { activityId, activityTs } ) =>
@@ -264,7 +263,8 @@ class ActivityLogDay extends Component {
 				>
 					{ newer.map( log => <LogItem { ...{ key: log.activityId, log } } /> ) }
 					{ above && <LogItem { ...{ key: above.activityId, log: above, hasBreak: true } } /> }
-					{ older.length > 0 && confirmDialog }
+					{ older.length > 0 && restoreConfirmDialog }
+					{ older.length > 0 && backupConfirmDialog }
 					{ older.map( log => <LogItem { ...{ key: log.activityId, log } } /> ) }
 				</FoldableCard>
 			</div>
