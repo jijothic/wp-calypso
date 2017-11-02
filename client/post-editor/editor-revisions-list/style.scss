@@ -64,7 +64,7 @@
 .editor-revisions__wrapper {
 	display: flex;
 	height: 96vh;
-	min-width: 600px;
+	width: 75vw;
 	justify-content: space-between;
 	overflow-y: hidden;
 
@@ -75,6 +75,7 @@
 	}
 
 	.editor-diff-viewer {
+		min-width: 300px;
 		overflow-y: scroll;
 	}
 }
