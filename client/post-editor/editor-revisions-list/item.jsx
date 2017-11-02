@@ -64,15 +64,6 @@ class EditorRevisionsListItem extends PureComponent {
 						<span className="editor-revisions-list__minor-changes">{ translate( 'minor' ) }</span>
 					) }
 				</div>
-
-				{ isMultiUserSite && (
-					<span className="editor-revisions-list__author">
-						{ isObject( revision.author ) &&
-							translate( '%(author)s', {
-								args: { author: revision.author.display_name },
-							} ) }
-					</span>
-				) }
 			</button>
 		);
 	}
