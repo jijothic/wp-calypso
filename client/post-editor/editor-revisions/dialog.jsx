@@ -6,7 +6,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { localize } from 'i18n-calypso';
-import { flow, noop } from 'lodash';
+import { get, flow, noop } from 'lodash';
 
 /**
  * Internal dependencies
@@ -24,7 +24,7 @@ class PostRevisionsDialog extends PureComponent {
 		siteId: PropTypes.number,
 
 		// connected to state
-		isVisible: PropTypes.func.isRequired,
+		isVisible: PropTypes.bool.isRequired,
 		selectedRevisionId: PropTypes.number,
 
 		// connected to dispatch
@@ -37,6 +37,25 @@ class PostRevisionsDialog extends PureComponent {
 	static defaultProps = {
 		onClose: noop,
 	};
+
+	componentWillMount() {
+		this.toggleBodyClass( { isVisible: this.props.isVisible } );
+	}
+
+	componentWillUpdate( { isVisible } ) {
+		this.toggleBodyClass( { isVisible } );
+	}
+
+	toggleBodyClass( { isVisible } ) {
+		if ( ! ( typeof document === 'object' && get( document, 'body.classList' ) ) ) {
+			return;
+		}
+
+		const bodyClassName = 'showing-post-revisions-dialog';
+		isVisible
+			? document.body.classList.add( bodyClassName )
+			: document.body.classList.remove( bodyClassName );
+	}
 
 	componentDidMount() {
 		this.props.recordTracksEvent( 'calypso_editor_post_revisions_open' );
