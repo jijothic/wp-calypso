@@ -8,7 +8,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { localize } from 'i18n-calypso';
-import { flow, isObject } from 'lodash';
+import { flow, get } from 'lodash';
 
 /**
  * Internal dependencies
@@ -24,6 +24,7 @@ class EditorRevisionsListItem extends PureComponent {
 
 	render() {
 		const { revision, isMultiUserSite, translate } = this.props;
+		const authorName = get( revision, 'author.display_name' );
 		return (
 			<button
 				className="editor-revisions-list__button"
@@ -33,6 +34,9 @@ class EditorRevisionsListItem extends PureComponent {
 				<span className="editor-revisions-list__date">
 					<PostTime date={ revision.date } />
 				</span>
+
+				{ authorName &&
+				isMultiUserSite && <span className="editor-revisions-list__author">{ authorName }</span> }
 
 				<div className="editor-revisions-list__changes">
 					{ revision.changes.added > 0 && (
