@@ -34,32 +34,21 @@ class EditorRevisionsListItem extends PureComponent {
 					<PostTime date={ revision.date } />
 				</span>
 
-				{ isMultiUserSite && (
-					<span className="editor-revisions-list__author">
-						{ isObject( revision.author ) &&
-							translate( '%(author)s', {
-								args: { author: revision.author.display_name },
-							} ) }
-					</span>
-				) }
-
 				<div className="editor-revisions-list__changes">
 					{ revision.changes.added > 0 && (
 						<span className="editor-revisions-list__additions">
-							+
-							{ this.props.translate( '%(changes)d word', '%(changes)d words', {
+							<b>+</b>
+							{ this.props.translate( '%(changes)d', '%(changes)d', {
 								args: { changes: this.props.revision.changes.added },
 								count: revision.changes.added,
 							} ) }
 						</span>
 					) }
 
-					{ revision.changes.added > 0 && revision.changes.removed > 0 && '  ' }
-
 					{ revision.changes.removed > 0 && (
 						<span className="editor-revisions-list__deletions">
-							-
-							{ translate( '%(changes)d word', '%(changes)d words', {
+							<b>-</b>
+							{ translate( '%(changes)d', '%(changes)d', {
 								args: { changes: revision.changes.removed },
 								count: revision.changes.removed,
 							} ) }
@@ -68,11 +57,18 @@ class EditorRevisionsListItem extends PureComponent {
 
 					{ revision.changes.added === 0 &&
 					revision.changes.removed === 0 && (
-						<span className="editor-revisions-list__minor-changes">
-							{ translate( 'minor changes' ) }
-						</span>
+						<span className="editor-revisions-list__minor-changes">{ translate( 'minor' ) }</span>
 					) }
 				</div>
+
+				{ isMultiUserSite && (
+					<span className="editor-revisions-list__author">
+						{ isObject( revision.author ) &&
+							translate( '%(author)s', {
+								args: { author: revision.author.display_name },
+							} ) }
+					</span>
+				) }
 			</button>
 		);
 	}
