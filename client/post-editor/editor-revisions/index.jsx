@@ -86,7 +86,6 @@ EditorRevisions.propTypes = {
 	authorsIds: PropTypes.array.isRequired,
 	postId: PropTypes.number.isRequired,
 	revisions: PropTypes.array.isRequired,
-	selectedRevisionId: PropTypes.number.isRequired,
 	selectedRevisionId: PropTypes.number,
 	siteId: PropTypes.number.isRequired,
 
