@@ -20,12 +20,9 @@ import LoadButton from 'post-editor/editor-revisions-list/load-button';
 class PostRevisionsDialog extends PureComponent {
 	static propTypes = {
 		onClose: PropTypes.func,
-		postId: PropTypes.number,
-		siteId: PropTypes.number,
 
 		// connected to state
 		isVisible: PropTypes.bool.isRequired,
-		selectedRevisionId: PropTypes.number,
 
 		// connected to dispatch
 		recordTracksEvent: PropTypes.func.isRequired,
@@ -62,10 +59,10 @@ class PostRevisionsDialog extends PureComponent {
 	}
 
 	render() {
-		const { isVisible, onClose, postId, selectedRevisionId, siteId, translate } = this.props;
+		const { isVisible, onClose, translate } = this.props;
 		const dialogButtons = [
 			{ action: 'cancel', compact: true, label: translate( 'Cancel' ) },
-			<LoadButton postId={ postId } selectedRevisionId={ selectedRevisionId } siteId={ siteId } />,
+			<LoadButton />,
 		];
 
 		return (
@@ -84,11 +81,9 @@ class PostRevisionsDialog extends PureComponent {
 export default flow(
 	localize,
 	connect(
-		state => {
-			return {
-				isVisible: isPostRevisionsDialogVisible( state ),
-			};
-		},
+		state => ( {
+			isVisible: isPostRevisionsDialogVisible( state ),
+		} ),
 		{ recordTracksEvent }
 	)
 )( PostRevisionsDialog );

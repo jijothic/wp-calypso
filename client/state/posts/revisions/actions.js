@@ -1,9 +1,7 @@
+/** @format */
 /**
  * Internal dependencies
- *
- * @format
  */
-
 import {
 	POST_REVISIONS_RECEIVE,
 	POST_REVISIONS_REQUEST,
@@ -12,6 +10,15 @@ import {
 	POST_REVISIONS_SELECT,
 	POST_REVISIONS_TOGGLE_SHOWING_DIALOG,
 } from 'state/action-types';
+/*
+import {
+	autosave,
+	editPost,
+	startEditingExisting,
+	stopEditing,
+	updateMetadata,
+} from 'state/posts/actions';
+*/
 
 /**
  * Action creator function: POST_REVISIONS_REQUEST
@@ -82,3 +89,19 @@ export const selectPostRevision = revisionId => ( {
 export const togglePostRevisionsDialog = () => ( {
 	type: POST_REVISIONS_TOGGLE_SHOWING_DIALOG,
 } );
+
+export const loadPostRevision = (
+	{ siteId, postId, postType = 'post', revision },
+	callback
+) => dispatch => {
+	/* This is not working -- figure out the necessary flux incantation
+	editPost( siteId, postId, {
+		content: revision.content,
+		title: revision.title,
+	} );
+	*/
+
+	dispatch( requestPostRevisions( siteId, postId, postType ) );
+	dispatch( { type: 'POST_REVISIONS_LOAD_REVISION' } );
+	typeof callback === 'function' && callback();
+};

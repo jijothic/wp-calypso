@@ -65,7 +65,11 @@ class EditorRevisions extends Component {
 
 		return (
 			<div className="editor-revisions__wrapper">
-				<QueryPostRevisions postId={ postId } siteId={ siteId } />
+				<QueryPostRevisions
+					postId={ postId }
+					siteId={ siteId }
+					selectedRevisionId={ selectedRevisionId }
+				/>
 				<QueryUsers siteId={ siteId } userIds={ authorsIds } />
 				<EditorDiffViewer
 					postId={ postId }
